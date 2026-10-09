@@ -1,0 +1,1410 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrawatt AI</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&display=swap');
+
+:root {
+    --bg:#05070c;
+    --panel:#0d1420;
+    --white:#f7fbff;
+    --silver:#cbd5e1;
+    --blue:#42c9ff;
+    --gold:#ffd36a;
+    --yellow:#fff2a0;
+    --muted:#92a1b6;
+    --border:rgba(120,195,255,.22);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+    background:var(--bg);
+    color:var(--white);
+    font-family:Inter,sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+body::before {
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+        radial-gradient(ellipse at 50% 0%,rgba(45,125,255,.16),transparent 48%),
+        radial-gradient(ellipse at 100% 100%,rgba(255,195,70,.07),transparent 35%),
+        linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+    background-size:auto,auto,40px 40px,40px 40px;
+}
+
+button,input { font:inherit; }
+button { cursor:pointer; }
+
+header {
+    height:68px;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:50;
+    padding:0 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(5,7,12,.82);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(180,210,255,.12);
+}
+
+.brand-left {
+    font-size:10px;
+    letter-spacing:3px;
+    color:var(--silver);
+    font-weight:800;
+}
+
+.brand-left span { color:var(--blue); }
+
+.brand {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(14px,3vw,22px);
+    font-weight:900;
+    letter-spacing:1px;
+    background:linear-gradient(
+        180deg,#fff 0%,#cbdfff 22%,#7892b5 39%,
+        #fff 51%,#fff0a8 66%,#dca744 82%,#fff4d4 100%
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 0 12px rgba(80,180,255,.2));
+}
+
+main {
+    min-height:100vh;
+    padding:95px 16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.page {
+    width:100%;
+    max-width:760px;
+    display:none;
+}
+
+.page.active { display:block; }
+
+.page.enter {
+    animation:portalIn .75s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.page.leave {
+    animation:portalOut .35s ease-in both;
+}
+
+@keyframes portalIn {
+    0% {
+        opacity:0;
+        transform:perspective(1000px) translateX(110px) scale(.65) rotateY(-14deg);
+        filter:blur(10px) brightness(2);
+        clip-path:circle(0% at 50% 50%);
+    }
+    55% {
+        opacity:1;
+        clip-path:circle(100% at 50% 50%);
+    }
+    78% {
+        transform:perspective(1000px) translateX(-6px) scale(1.02);
+    }
+    100% {
+        opacity:1;
+        transform:perspective(1000px) translateX(0) scale(1);
+        filter:blur(0) brightness(1);
+        clip-path:circle(100% at 50% 50%);
+    }
+}
+
+@keyframes portalOut {
+    to {
+        opacity:0;
+        transform:perspective(1000px) translateX(-90px) scale(.72);
+        filter:blur(8px) brightness(1.8);
+    }
+}
+
+/* NETFLIX-STYLE BRAND PROMO */
+
+.intro {
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    overflow:hidden;
+    background:radial-gradient(ellipse at center,#13263d 0%,#080c15 47%,#020306 100%);
+    animation:introEnd .65s ease 3s forwards;
+}
+
+.intro::before {
+    content:"";
+    position:absolute;
+    height:2px;
+    width:180vw;
+    background:linear-gradient(90deg,transparent,#42c9ff,#fff,#ffd36a,transparent);
+    box-shadow:0 0 30px #42c9ff;
+    transform:rotate(-24deg);
+    animation:lightSweep 1.4s ease-in-out both;
+}
+
+.intro::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(
+        0deg,transparent 0,transparent 3px,rgba(255,255,255,.025) 4px
+    );
+    pointer-events:none;
+}
+
+.ring {
+    position:absolute;
+    width:min(78vw,470px);
+    aspect-ratio:1;
+    border:1px solid rgba(90,195,255,.4);
+    border-radius:50%;
+    box-shadow:0 0 40px rgba(72,200,255,.1),inset 0 0 50px rgba(72,200,255,.06);
+    animation:ringReveal 1.8s ease-out both;
+}
+
+.ring::before,.ring::after {
+    content:"";
+    position:absolute;
+    inset:12%;
+    border:1px solid rgba(255,211,106,.4);
+    border-radius:50%;
+}
+
+.ring::after {
+    inset:25%;
+    border-color:rgba(255,255,255,.25);
+}
+
+.intro-content {
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:15px;
+    animation:logoReveal 1.4s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.intro-icon {
+    font-size:clamp(38px,8vw,65px);
+    color:var(--gold);
+    margin-bottom:15px;
+    text-shadow:0 0 30px rgba(255,211,106,.6);
+}
+
+.intro-title {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(25px,6.7vw,59px);
+    font-weight:900;
+    letter-spacing:clamp(1px,.7vw,7px);
+    white-space:nowrap;
+    background:linear-gradient(
+        180deg,#fff 0%,#d8edff 20%,#71a8df 36%,
+        #fff 48%,#fff1a0 64%,#e0a439 82%,#fff6d9 100%
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 0 22px rgba(72,200,255,.25));
+}
+
+.intro-subtitle {
+    margin-top:17px;
+    font-size:10px;
+    letter-spacing:4px;
+    color:#bddbfa;
+    animation:fadeUp .8s ease .6s both;
+}
+
+.intro-line {
+    height:2px;
+    width:0;
+    margin:23px auto 0;
+    background:linear-gradient(90deg,transparent,#42c9ff,#fff,#ffd36a,transparent);
+    box-shadow:0 0 20px #42c9ff;
+    animation:lineGrow 1s ease .5s forwards;
+}
+
+@keyframes logoReveal {
+    from { opacity:0;transform:scale(.5);filter:blur(18px); }
+    to { opacity:1;transform:scale(1);filter:blur(0); }
+}
+
+@keyframes ringReveal {
+    from { transform:scale(.15) rotate(-50deg);opacity:0; }
+    to { transform:scale(1) rotate(0);opacity:1; }
+}
+
+@keyframes lightSweep {
+    from { left:-150%;top:-50%; }
+    to { left:150%;top:150%; }
+}
+
+@keyframes lineGrow { to { width:min(70%,350px); } }
+
+@keyframes fadeUp {
+    from { opacity:0;transform:translateY(12px); }
+    to { opacity:1;transform:translateY(0); }
+}
+
+@keyframes introEnd {
+    to {
+        opacity:0;
+        visibility:hidden;
+        transform:scale(1.1);
+        filter:blur(12px);
+        pointer-events:none;
+    }
+}
+
+/* CHAT HOME */
+
+.hero {
+    text-align:center;
+    margin-bottom:26px;
+}
+
+.label {
+    display:inline-block;
+    color:#b9e7ff;
+    background:rgba(72,200,255,.06);
+    border:1px solid rgba(72,200,255,.25);
+    border-radius:30px;
+    padding:8px 13px;
+    margin-bottom:17px;
+    font-size:10px;
+    letter-spacing:2px;
+}
+
+.hero h1 {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(26px,5vw,43px);
+    line-height:1.35;
+    margin-bottom:12px;
+}
+
+.hero h1 span {
+    color:var(--blue);
+    text-shadow:0 0 25px rgba(72,200,255,.22);
+}
+
+.hero p {
+    max-width:510px;
+    margin:auto;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.8;
+}
+
+.chat {
+    position:relative;
+    max-width:650px;
+    margin:auto;
+    overflow:hidden;
+    border:1px solid rgba(156,200,255,.24);
+    border-radius:21px;
+    background:linear-gradient(145deg,rgba(17,26,41,.98),rgba(7,11,19,.98));
+    box-shadow:0 25px 75px rgba(0,0,0,.4),0 0 30px rgba(72,200,255,.05);
+}
+
+.chat::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:15%;
+    width:70%;
+    height:1px;
+    background:linear-gradient(90deg,transparent,#42c9ff,#fff,#ffd36a,transparent);
+}
+
+.chat-header {
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-bottom:1px solid rgba(156,200,255,.13);
+}
+
+.avatar {
+    width:44px;
+    height:44px;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    border:1px solid rgba(72,200,255,.35);
+    border-radius:14px;
+    font-size:24px;
+    background:linear-gradient(135deg,rgba(72,200,255,.17),rgba(255,211,106,.1));
+}
+
+.chat-header h3 { font-size:13px;margin-bottom:5px; }
+.chat-header p { font-size:10px;color:var(--muted); }
+
+.online {
+    margin-left:auto;
+    color:var(--gold);
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.messages {
+    height:270px;
+    overflow-y:auto;
+    padding:19px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    scroll-behavior:smooth;
+}
+
+.messages::-webkit-scrollbar { width:4px; }
+.messages::-webkit-scrollbar-thumb { background:#385a7a;border-radius:10px; }
+
+.message {
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    max-width:94%;
+    animation:messageIn .25s ease both;
+}
+
+.message.user {
+    align-self:flex-end;
+    flex-direction:row-reverse;
+}
+
+@keyframes messageIn {
+    from { opacity:0;transform:translateY(8px); }
+    to { opacity:1;transform:translateY(0); }
+}
+
+.mini-avatar {
+    width:29px;
+    height:29px;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    border:1px solid rgba(72,200,255,.2);
+    border-radius:9px;
+    background:#17263a;
+    font-size:14px;
+}
+
+.bubble {
+    padding:12px 14px;
+    border-radius:4px 14px 14px 14px;
+    border:1px solid rgba(255,255,255,.06);
+    background:#152033;
+    color:#eaf2ff;
+    font-size:12px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.message.user .bubble {
+    border-radius:14px 4px 14px 14px;
+    background:linear-gradient(135deg,rgba(72,200,255,.14),rgba(255,211,106,.06));
+    border-color:rgba(72,200,255,.2);
+}
+
+.bubble strong { color:var(--gold); }
+
+.suggestions {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:0 16px 15px;
+}
+
+.suggestion {
+    border:1px solid rgba(156,200,255,.2);
+    background:#111a28;
+    color:#d9eaff;
+    padding:8px 11px;
+    border-radius:25px;
+    font-size:10px;
+    transition:.2s;
+}
+
+.suggestion:hover {
+    border-color:var(--gold);
+    color:var(--gold);
+    transform:translateY(-2px);
+}
+
+.input-area {
+    display:flex;
+    gap:9px;
+    padding:13px;
+    border-top:1px solid rgba(156,200,255,.14);
+    background:rgba(0,0,0,.2);
+}
+
+.input-area input {
+    flex:1;
+    min-width:0;
+    padding:14px;
+    outline:none;
+    color:white;
+    background:#080d16;
+    border:1px solid #293b54;
+    border-radius:12px;
+    font-size:12px;
+}
+
+.input-area input:focus {
+    border-color:var(--blue);
+    box-shadow:0 0 15px rgba(72,200,255,.1);
+}
+
+.send {
+    width:47px;
+    min-width:47px;
+    border:none;
+    border-radius:12px;
+    color:#07111a;
+    font-size:21px;
+    font-weight:900;
+    background:linear-gradient(135deg,#fff,#8edcff 48%,#ffd36a);
+    transition:.2s;
+}
+
+.send:hover {
+    transform:scale(1.06);
+    box-shadow:0 0 23px rgba(72,200,255,.3);
+}
+
+.note {
+    text-align:center;
+    color:#71849c;
+    font-size:9px;
+    letter-spacing:1px;
+    padding:0 8px 13px;
+}
+
+/* RECYCLING GUIDE */
+
+.guide-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.back {
+    color:var(--blue);
+    background:#101a29;
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:10px 13px;
+    font-size:11px;
+}
+
+.guide-top small {
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.guide-heading { margin-bottom:22px; }
+
+.guide-heading .label { margin-bottom:13px; }
+
+.guide-heading h2 {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(23px,5vw,37px);
+    margin-bottom:9px;
+}
+
+.guide-heading h2 span { color:var(--gold); }
+
+.guide-heading p {
+    font-size:12px;
+    line-height:1.8;
+    color:var(--muted);
+}
+
+.guide-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    align-items:start;
+}
+
+.card {
+    overflow:hidden;
+    border:1px solid rgba(156,200,255,.2);
+    background:rgba(13,19,30,.94);
+    border-radius:18px;
+}
+
+.guide-image {
+    width:100%;
+    height:240px;
+    display:block;
+    object-fit:cover;
+    background:#101827;
+}
+
+.caption { padding:15px; }
+.caption h3 { font-size:14px;margin-bottom:8px; }
+
+.caption p {
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.8;
+}
+
+.tags {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:12px;
+}
+
+.tag {
+    border:1px solid rgba(72,200,255,.2);
+    border-radius:30px;
+    padding:7px 9px;
+    color:#a7e3ff;
+    font-size:9px;
+    background:rgba(72,200,255,.06);
+}
+
+.guide-content { padding:18px; }
+.guide-content h3 { font-size:14px;margin-bottom:13px; }
+
+.materials {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-bottom:23px;
+}
+
+.material {
+    padding:8px 10px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:9px;
+    background:#151e2c;
+    font-size:10px;
+    color:#dbe6f7;
+}
+
+.steps { display:flex;flex-direction:column;gap:16px; }
+
+.step { display:flex;gap:11px; }
+
+.step-number {
+    width:31px;
+    height:31px;
+    flex-shrink:0;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(255,211,106,.27);
+    border-radius:10px;
+    color:var(--gold);
+    background:rgba(255,211,106,.06);
+    font-family:Orbitron,sans-serif;
+    font-size:10px;
+}
+
+.step h4 { font-size:12px;margin:3px 0 6px; }
+
+.step p {
+    font-size:11px;
+    line-height:1.8;
+    color:var(--muted);
+}
+
+.safety {
+    margin-top:19px;
+    padding:13px;
+    border:1px solid rgba(255,211,106,.23);
+    background:rgba(255,211,106,.045);
+    border-radius:12px;
+}
+
+.safety h4 { color:var(--gold);font-size:11px;margin-bottom:7px; }
+
+.safety p {
+    color:#c5c5c0;
+    font-size:10px;
+    line-height:1.8;
+}
+
+.ideas { margin-top:23px; }
+.ideas h3 { font-size:15px;margin-bottom:12px; }
+
+.idea-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.idea {
+    padding:14px;
+    border:1px solid rgba(156,200,255,.17);
+    border-radius:14px;
+    background:rgba(13,19,30,.8);
+}
+
+.idea span { font-size:23px; }
+.idea h4 { font-size:11px;margin:9px 0 6px; }
+
+.idea p {
+    font-size:10px;
+    line-height:1.8;
+    color:var(--muted);
+}
+
+.actions {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:21px;
+}
+
+.primary,.secondary {
+    padding:12px 16px;
+    border-radius:11px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.primary {
+    border:none;
+    color:#06101a;
+    background:linear-gradient(120deg,#fff,#8edcff 48%,#ffd36a);
+}
+
+.secondary {
+    color:var(--blue);
+    background:#101a29;
+    border:1px solid var(--border);
+}
+
+footer {
+    padding:15px 12px 20px;
+    text-align:center;
+    color:#66788e;
+    font-size:9px;
+    line-height:1.9;
+}
+
+footer span { color:var(--gold);letter-spacing:2px; }
+
+@media(max-width:620px) {
+    header { height:62px;padding:0 4%; }
+    .brand-left { font-size:8px;letter-spacing:1.5px; }
+    .brand { font-size:13px;letter-spacing:0; }
+
+    main { padding:82px 12px 20px;align-items:flex-start; }
+    .hero { margin:9px 0 21px; }
+    .hero h1 { font-size:26px; }
+    .hero p { font-size:11px; }
+
+    .messages { height:285px;padding:15px 10px; }
+    .message { max-width:98%; }
+    .bubble { font-size:11px; }
+    .chat-header { padding:13px; }
+    .suggestions { padding-left:10px;padding-right:10px; }
+
+    .input-area { padding:10px;gap:7px; }
+    .input-area input { padding:12px 10px;font-size:11px; }
+    .send { width:43px;min-width:43px; }
+
+    .guide-grid { grid-template-columns:1fr; }
+    .guide-image { height:215px; }
+    .idea-grid { grid-template-columns:1fr; }
+
+    .idea {
+        display:grid;
+        grid-template-columns:32px 1fr;
+        column-gap:8px;
+    }
+
+    .idea span { grid-row:span 2; }
+    .idea h4 { margin-top:2px; }
+    .idea p { grid-column:2; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,*::before,*::after {
+        animation-duration:.01ms !important;
+        transition-duration:.01ms !important;
+    }
+}
+
+@media print {
+    header,footer,.intro,.guide-top,.actions { display:none !important; }
+    body,main { background:white;color:black;display:block;padding:0; }
+    #homePage { display:none !important; }
+    #guidePage { display:block !important; }
+    .card { border:1px solid #ccc;break-inside:avoid; }
+    .guide-heading p,.step p,.caption p,.idea p { color:#333; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- CINEMATIC TERRAWATT AI INTRO -->
+<div class="intro" id="intro">
+    <div class="ring"></div>
+    <div class="intro-content">
+        <div class="intro-icon">♻</div>
+        <div class="intro-title">TERRAWATT AI</div>
+        <div class="intro-line"></div>
+        <div class="intro-subtitle">INTELLIGENCE FOR A GREENER PLANET</div>
+    </div>
+</div>
+
+<header>
+    <div class="brand-left">SMART <span>RECYCLE</span></div>
+    <div class="brand">TERRAWATT AI</div>
+</header>
+
+<main>
+
+<!-- PAGE 1: CHAT -->
+<section class="page active" id="homePage">
+
+    <div class="hero">
+        <div class="label">✦ YOUR SMART RECYCLING COMPANION</div>
+        <h1>Waste Less.<br><span>Create More.</span></h1>
+        <p>
+            Tell me what you have. I'll suggest a creative way to reuse it
+            and guide you through the steps.
+        </p>
+    </div>
+
+    <div class="chat">
+
+        <div class="chat-header">
+            <div class="avatar">🌱</div>
+            <div>
+                <h3>Terrawatt Assistant</h3>
+                <p>Your personal recycling guide</p>
+            </div>
+            <div class="online">● READY</div>
+        </div>
+
+        <div class="messages" id="messages">
+            <div class="message">
+                <div class="mini-avatar">🌱</div>
+                <div class="bubble">Hey! Welcome to <strong>Terrawatt AI</strong> ♻️
+
+Tell me what waste material you have.
+
+For example: "I have a plastic bottle."
+
+I'll suggest a project and show you how to do it step by step.</div>
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <button class="suggestion" onclick="quickAsk('I have a plastic bottle')">🧴 Bottle</button>
+            <button class="suggestion" onclick="quickAsk('I have cardboard')">📦 Cardboard</button>
+            <button class="suggestion" onclick="quickAsk('I have old newspapers')">📰 Newspaper</button>
+            <button class="suggestion" onclick="quickAsk('I have a tin can')">🥫 Tin can</button>
+            <button class="suggestion" onclick="quickAsk('I have a glass bottle')">🍾 Glass</button>
+            <button class="suggestion" onclick="quickAsk('I have old clothes')">👕 Clothes</button>
+        </div>
+
+        <form class="input-area" id="chatForm">
+            <input id="userInput" type="text"
+                placeholder="What waste item do you have?"
+                autocomplete="off" required>
+            <button class="send" type="submit" aria-label="Send">➤</button>
+        </form>
+
+        <div class="note">BUILT-IN DEMO ASSISTANT · NO API KEY REQUIRED</div>
+    </div>
+
+</section>
+
+
+<!-- PAGE 2: RECYCLING GUIDE -->
+<section class="page" id="guidePage">
+
+    <div class="guide-top">
+        <button class="back" onclick="goHome()">← Back to Chat</button>
+        <small>YOUR RECYCLING GUIDE</small>
+    </div>
+
+    <div class="guide-heading">
+        <div class="label">✦ RECYCLE MODE ACTIVATED</div>
+        <h2 id="guideHeading">Give Waste a <span>New Life</span></h2>
+        <p id="guideDescription">Follow these steps to reuse your item.</p>
+    </div>
+
+    <div class="guide-grid">
+
+        <div>
+            <div class="card">
+                <img class="guide-image" id="guideImage"
+                    src="https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=900&q=80"
+                    alt="Plants growing in a garden">
+
+                <div class="caption">
+                    <h3 id="projectTitle">DIY Recycled Planter</h3>
+                    <p id="projectCaption">Give everyday materials a second life.</p>
+                    <div class="tags">
+                        <span class="tag" id="difficultyTag">EASY PROJECT</span>
+                        <span class="tag" id="timeTag">15 MINUTES</span>
+                        <span class="tag">REUSE IDEA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="safety">
+                <h4>⚠ SAFETY FIRST</h4>
+                <p id="safetyText"></p>
+            </div>
+        </div>
+
+        <div class="card guide-content">
+            <h3>🧰 Materials Required</h3>
+            <div class="materials" id="materialsList"></div>
+
+            <h3>⚡ Step-by-Step Instructions</h3>
+            <div class="steps" id="stepsList"></div>
+        </div>
+
+    </div>
+
+    <div class="ideas">
+        <h3>💡 More Creative Ideas</h3>
+        <div class="idea-grid" id="ideasGrid"></div>
+    </div>
+
+    <div class="actions">
+        <button class="primary" onclick="goHome()">♻ Recycle Another Item</button>
+        <button class="secondary" onclick="window.print()">▤ Print Guide</button>
+    </div>
+
+</section>
+
+</main>
+
+<footer>
+    <span>TERRAWATT AI</span><br>
+    SMALL ACTIONS. BIGGER CHANGE.
+</footer>
+
+
+<script>
+/* ========================================
+   TERRAWATT AI
+   Single-file, keyword-based demo assistant
+======================================== */
+
+const guides = {
+
+    bottle: {
+        name:"Plastic Bottle",
+        title:"Plastic Bottle → Plant Pot",
+        description:"Transform a clean, suitable plastic bottle into a small planter.",
+        caption:"Reuse an empty bottle for a small herb or flower plant.",
+        image:"https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=900&q=80",
+        alt:"Green plants in a garden",
+        difficulty:"EASY PROJECT",
+        time:"15–20 MINUTES",
+        materials:["Clean plastic bottle","Potting soil","Small plant or seeds","Water","Marker"],
+        steps:[
+            ["Clean the bottle","Remove the label and cap. Wash with soap and water, then let it dry."],
+            ["Mark an opening","Plan a suitable planting opening for your plant."],
+            ["Prepare the opening","Ask an adult to cut the bottle safely with suitable tools. Cover or smooth all sharp edges."],
+            ["Add drainage","With adult help, make small drainage holes in the base and place the planter on a tray."],
+            ["Add soil and plant","Fill with potting soil, add a small seedling, and water lightly."],
+            ["Find a suitable spot","Place the planter where the plant receives appropriate light."]
+        ],
+        safety:"An adult must handle cutting tools. Never burn, melt, or heat plastic. Do not reuse containers that held chemicals or hazardous products. Keep sharp edges safely covered.",
+        ideas:[
+            ["🌱","Seed Starter","Use a clean bottle base as a temporary seed container with drainage."],
+            ["💧","Watering Container","Reuse a clean bottle to carry water to garden plants."],
+            ["✏️","Desk Organizer","With adult help, make a safe holder for lightweight stationery."]
+        ]
+    },
+
+    cardboard:{
+        name:"Cardboard",
+        title:"Cardboard → Desk Organizer",
+        description:"Turn clean cardboard packaging into a useful study-table organizer.",
+        caption:"Reuse a clean, sturdy box before recycling it.",
+        image:"https://images.unsplash.com/photo-1605600659873-d808a13e4d9a?auto=format&fit=crop&w=900&q=80",
+        alt:"Cardboard packaging",
+        difficulty:"EASY PROJECT",
+        time:"20–30 MINUTES",
+        materials:["Clean cardboard","Ruler","Pencil","Non-toxic glue","Decorative paper"],
+        steps:[
+            ["Choose cardboard","Select a clean, dry box that is not greasy or mouldy."],
+            ["Plan the organizer","Measure the stationery you want to store."],
+            ["Prepare the pieces","Ask an adult to cut the cardboard to the required sizes."],
+            ["Join the sections","Use non-toxic glue or paper tape to attach the pieces."],
+            ["Decorate","Use reused paper or drawings to personalize the organizer."],
+            ["Let it dry","Wait until the glue is fully dry before using it."]
+        ],
+        safety:"Have an adult handle craft knives and sharp cutting tools. Keep the finished organizer dry.",
+        ideas:[
+            ["📚","Book Divider","Fold sturdy cardboard into a bookshelf divider."],
+            ["🎁","Gift Box","Decorate an old box for reusable gift packaging."],
+            ["🗂️","Storage Tray","Reuse shallow boxes to organize a drawer."]
+        ]
+    },
+
+    newspaper:{
+        name:"Old Newspaper",
+        title:"Newspaper → Paper Craft",
+        description:"Turn old newspapers into useful crafts and decorations.",
+        caption:"Reuse dry, clean newspaper or recycle it through a suitable paper collection service.",
+        image:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=900&q=80",
+        alt:"Newspaper pages",
+        difficulty:"BEGINNER",
+        time:"10–25 MINUTES",
+        materials:["Old newspapers","Non-toxic glue","String","Reusable container","Scissors"],
+        steps:[
+            ["Sort the paper","Choose dry paper without oil or chemical contamination."],
+            ["Choose a project","Plan gift wrap, decorations, or a paper basket."],
+            ["Fold or roll","Fold sheets neatly or roll them into paper tubes."],
+            ["Secure the shape","Use a little non-toxic glue or reusable string."],
+            ["Decorate","Use leftover paper and drawings to add your own design."],
+            ["Recycle leftovers","Recycle unused clean paper according to local rules."]
+        ],
+        safety:"Do not use contaminated paper for crafts that contact food. Handle scissors safely.",
+        ideas:[
+            ["🎁","Gift Wrap","Wrap a gift in newspaper and decorate with string."],
+            ["🧺","Paper Basket","Make a simple basket from rolled paper with adult help."],
+            ["🎨","Wall Art","Create a collage using paper shapes."]
+        ]
+    },
+
+    can:{
+        name:"Metal Can",
+        title:"Metal Can → Desk Holder",
+        description:"Reuse a clean can as a holder for pens if its edges can be made safe.",
+        caption:"Metal is recyclable too; reuse the can only if it is safe to handle.",
+        image:"https://images.unsplash.com/photo-1605600659873-d808a13e4d9a?auto=format&fit=crop&w=900&q=80",
+        alt:"Reused containers",
+        difficulty:"EASY PROJECT",
+        time:"15–20 MINUTES",
+        materials:["Clean empty can","Thick paper or fabric","Non-toxic glue","Decorations"],
+        steps:[
+            ["Choose a can","Use an empty food can that has been washed and dried."],
+            ["Check the edges","Ask an adult to inspect and safely prepare the rim."],
+            ["Cover the outside","Wrap the exterior with thick paper or fabric."],
+            ["Decorate","Add drawings or reused decorative materials."],
+            ["Allow it to dry","Wait until the glue is fully dry."],
+            ["Reuse it","Store pens or lightweight stationery inside."]
+        ],
+        safety:"Metal edges can cause cuts. Never handle a can with an exposed sharp rim. If it cannot be made safe, recycle it instead.",
+        ideas:[
+            ["✏️","Pen Holder","Store stationery in a safely prepared can."],
+            ["🧵","Craft Storage","Organize ribbon, thread, or other craft supplies."],
+            ["🪴","Plant Pot Cover","Place a separate plant pot inside a clean, safe can."]
+        ]
+    },
+
+    glass:{
+        name:"Glass Bottle",
+        title:"Glass Bottle → Flower Vase",
+        description:"Reuse an intact glass bottle as a decorative vase without cutting it.",
+        caption:"Keep the bottle intact and give it a new purpose.",
+        image:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=900&q=80",
+        alt:"Flowers in a vase",
+        difficulty:"VERY EASY",
+        time:"5–10 MINUTES",
+        materials:["Intact glass bottle","Water","Flowers or branches","Optional ribbon"],
+        steps:[
+            ["Inspect the bottle","Choose a bottle with no cracks, chips, or damage."],
+            ["Clean it","Wash with soap and water, handling it carefully."],
+            ["Add water","Fill with an appropriate amount of clean water."],
+            ["Arrange flowers","Place flowers or suitable branches inside."],
+            ["Decorate","Add a reusable ribbon if desired."],
+            ["Place it safely","Set it on a stable surface away from edges."]
+        ],
+        safety:"Never cut, break, or heat glass for a DIY project. Do not use cracked or chipped bottles. Recycle damaged glass through a suitable collection service.",
+        ideas:[
+            ["🌼","Flower Vase","Display fresh or dried flowers."],
+            ["🎀","Gift Decoration","Decorate an intact bottle for a non-food display."],
+            ["🌿","Plant Display","Use the bottle as a decorative display beside a plant."]
+        ]
+    },
+
+    clothes:{
+        name:"Old Clothes",
+        title:"Old Clothes → Cleaning Cloth",
+        description:"Give clean, worn-out fabric another use around the home.",
+        caption:"Reuse fabric that is no longer suitable for wearing.",
+        image:"https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=900&q=80",
+        alt:"Folded clothing",
+        difficulty:"BEGINNER",
+        time:"10–20 MINUTES",
+        materials:["Clean old clothing","Scissors","Ruler","Needle and thread if needed"],
+        steps:[
+            ["Sort the fabric","Choose clean material without mould or chemical contamination."],
+            ["Choose a purpose","Plan a cleaning cloth, patch, or simple fabric craft."],
+            ["Measure","Mark the required size."],
+            ["Prepare the fabric","Ask an adult to cut it safely with suitable scissors."],
+            ["Finish the edges","Fold edges or ask an adult to help stitch them."],
+            ["Reuse or donate","Use the cloth again or donate wearable clothing in good condition."]
+        ],
+        safety:"Use clean fabric. Ask an adult for help with scissors, needles, or sewing tools.",
+        ideas:[
+            ["🧽","Cleaning Cloth","Reuse suitable cotton fabric for cleaning."],
+            ["👜","Fabric Bag","Turn suitable fabric into a reusable bag with adult help."],
+            ["🧸","Fabric Craft","Use clean scraps for a supervised craft."]
+        ]
+    },
+
+    paper:{
+        name:"Waste Paper",
+        title:"Paper → Reusable Notepad",
+        description:"Use the blank sides of old paper for rough work and study notes.",
+        caption:"Reuse paper first, then recycle clean paper when practical.",
+        image:"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80",
+        alt:"Paper and writing materials",
+        difficulty:"VERY EASY",
+        time:"5–15 MINUTES",
+        materials:["Used paper","Paper clip","Ruler","Pen or pencil"],
+        steps:[
+            ["Collect paper","Choose sheets with a clean blank side."],
+            ["Sort by size","Group similarly sized sheets."],
+            ["Make a notepad","Align sheets with the blank sides facing up."],
+            ["Secure the sheets","Use a paper clip or ask an adult for help with a stapler."],
+            ["Use for rough work","Keep the notepad near your study area."],
+            ["Recycle afterwards","Recycle suitable clean paper when both sides are used."]
+        ],
+        safety:"Handle staples carefully. Avoid paper contaminated with chemicals or food.",
+        ideas:[
+            ["📝","Rough Notebook","Save blank sides for practice and calculations."],
+            ["🎨","Paper Crafts","Make simple decorations from paper scraps."],
+            ["📦","Packing Material","Reuse suitable paper to cushion stored items."]
+        ]
+    },
+
+    ewaste:{
+        name:"Electronic Waste",
+        title:"E-Waste → Responsible Recycling",
+        description:"Electronics need special handling. Reuse working devices or use an authorized e-waste collection service.",
+        caption:"Do not dismantle electronic devices at home.",
+        image:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=900&q=80",
+        alt:"Electronic devices",
+        difficulty:"SAFE COLLECTION",
+        time:"10–20 MINUTES",
+        materials:["Electronic device","Data backup if needed","Safe storage area","Authorized collection service"],
+        steps:[
+            ["Identify the item","Check whether it is a phone, charger, cable, computer, or another electronic item."],
+            ["Check for hazards","Do not touch a swollen, leaking, hot, or damaged battery. Tell a responsible adult."],
+            ["Protect your data","Back up your information and arrange secure data removal before donation."],
+            ["Store it safely","Keep electronics away from water, heat, and ordinary household waste."],
+            ["Find authorized collection","Use a verified e-waste recycler or manufacturer take-back service."],
+            ["Follow collection guidance","Follow the service's instructions for electronic devices and batteries."]
+        ],
+        safety:"Never open, puncture, or burn batteries or electronics. Keep damaged batteries away from heat and seek advice from a responsible adult or appropriate collection service.",
+        ideas:[
+            ["🔧","Repair First","Ask a qualified repair service whether the device can be repaired."],
+            ["🤝","Donate","Donate a working device after protecting your personal data."],
+            ["♻️","Recycle Properly","Use an authorized electronics collection programme."]
+        ]
+    },
+
+    food:{
+        name:"Food Scraps",
+        title:"Food Scraps → Compost",
+        description:"Suitable fruit and vegetable scraps can become compost with the right method.",
+        caption:"Follow local composting guidance and keep unsuitable waste out.",
+        image:"https://images.unsplash.com/photo-1589927986089-35812388d1f4?auto=format&fit=crop&w=900&q=80",
+        alt:"Fresh produce",
+        difficulty:"BEGINNER",
+        time:"10 MINUTES SETUP",
+        materials:["Fruit and vegetable scraps","Dry leaves","Compost container","Suitable garden soil"],
+        steps:[
+            ["Sort the scraps","Choose suitable plant-based fruit and vegetable scraps."],
+            ["Prepare a bin","Use an appropriate ventilated compost container."],
+            ["Add dry material","Mix scraps with dry leaves or suitable shredded untreated cardboard."],
+            ["Balance moisture","Keep the mixture damp, not waterlogged."],
+            ["Maintain the compost","Follow your bin's guidance and allow airflow."],
+            ["Wait until mature","Use it when dark, crumbly, and earthy-smelling."]
+        ],
+        safety:"Keep compost away from children and pets and wash your hands afterwards. A basic home compost bin should not contain meat, dairy, oils, or unsuitable materials.",
+        ideas:[
+            ["🌿","Garden Compost","Use mature compost to improve suitable garden soil."],
+            ["🍂","Leaf Compost","Combine dry leaves with suitable plant scraps."],
+            ["🪴","Plant Care","Add finished compost in appropriate amounts."]
+        ]
+    },
+
+    generic:{
+        name:"Everyday Waste",
+        title:"Waste → A Second Life",
+        description:"Identify the material first, then choose a safe reuse idea or appropriate recycling method.",
+        caption:"When reuse is unsuitable, choose a responsible collection option.",
+        image:"https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=900&q=80",
+        alt:"Recycling materials",
+        difficulty:"DEPENDS ON ITEM",
+        time:"VARIES",
+        materials:["Waste item","Material information","Suitable reusable materials","Correct collection service"],
+        steps:[
+            ["Identify the material","Check whether it is paper, cardboard, plastic, metal, glass, or another material."],
+            ["Check its condition","Look for contamination, sharp parts, cracks, batteries, or other hazards without touching anything dangerous."],
+            ["Clean only if safe","Clean ordinary household items when appropriate. Do not handle hazardous contamination."],
+            ["Choose a reuse idea","Consider storage, decoration, or a simple craft that does not require risky changes."],
+            ["Avoid unsafe modifications","Never burn, heat, melt, or dismantle unknown materials."],
+            ["Recycle responsibly","If reuse is unsuitable, use an appropriate local collection point."]
+        ],
+        safety:"If you cannot identify the material or it may contain chemicals, batteries, or sharp parts, do not cut or modify it. Ask a responsible adult or appropriate recycling service.",
+        ideas:[
+            ["🔍","Identify It","Check labels and material type first."],
+            ["🧰","Reuse Safely","Find a practical use that needs no risky modification."],
+            ["♻️","Recycle It","Use an appropriate collection service."]
+        ]
+    }
+};
+
+
+/* Identify common waste words */
+function identifyWaste(message) {
+    const text = message.toLowerCase();
+
+    if (/\b(e[\s-]?waste|electronic|electronics|old phone|mobile phone|charger|cable|computer|laptop|battery|headphones)\b/.test(text)) return "ewaste";
+
+    if (/\b(food waste|food scraps|fruit|vegetable peels|vegetable scraps|banana peel|compost|kitchen waste)\b/.test(text)) return "food";
+
+    if (/\b(plastic bottle|pet bottle|water bottle|soft drink bottle|bottle|plastic container)\b/.test(text)) return "bottle";
+
+    if (/\b(cardboard|carton|shipping box|delivery box|cardboard box)\b/.test(text)) return "cardboard";
+
+    if (/\b(newspaper|news paper|old newspapers|magazine|magazines)\b/.test(text)) return "newspaper";
+
+    if (/\b(tin can|aluminium can|aluminum can|metal can|soda can|food can|cans)\b/.test(text)) return "can";
+
+    if (/\b(glass bottle|glass jar|glass container|broken glass|glass)\b/.test(text)) return "glass";
+
+    if (/\b(old clothes|clothes|cloth|fabric|old shirt|old jeans|t-shirt|textile|textiles)\b/.test(text)) return "clothes";
+
+    if (/\b(paper|notebook|used sheets|waste paper|paper scraps)\b/.test(text)) return "paper";
+
+    return "generic";
+}
+
+
+/* Add safe chat messages */
+function addMessage(text, sender) {
+    const messages = document.getElementById("messages");
+
+    const row = document.createElement("div");
+    row.className = "message " + sender;
+
+    const avatar = document.createElement("div");
+    avatar.className = "mini-avatar";
+    avatar.textContent = sender === "user" ? "👤" : "🌱";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    row.append(avatar, bubble);
+    messages.appendChild(row);
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+
+/* Chat response */
+function handleMessage(text) {
+    text = text.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    const key = identifyWaste(text);
+    const guide = guides[key];
+
+    let reply;
+
+    if (key === "generic") {
+        reply = "Let's find a safe way to reuse your item! 🌍 I don't have a specific guide for that exact material yet, so I'll show a general guide. Check the material and safety information before changing it.";
+    } else {
+        reply = "Great! 🌱 I found a guide for " + guide.name + ".\n\nProject idea: " + guide.title + "\n\nI'll open your step-by-step guide now!";
+    }
+
+    addMessage(reply, "bot");
+    showGuide(key);
+}
+
+
+/* Quick suggestion buttons */
+function quickAsk(text) {
+    document.getElementById("userInput").value = text;
+    document.getElementById("chatForm").requestSubmit();
+}
+
+
+/* Portal transition between pages */
+function switchPage(nextId) {
+    const current = document.querySelector(".page.active");
+    const next = document.getElementById(nextId);
+
+    if (!current || current === next) return;
+
+    current.classList.remove("enter");
+    current.classList.add("leave");
+
+    setTimeout(() => {
+        current.classList.remove("active", "leave");
+        next.classList.add("active");
+
+        // Restart the entry animation
+        void next.offsetWidth;
+        next.classList.add("enter");
+    }, 320);
+}
+
+function goHome() {
+    switchPage("homePage");
+}
+
+
+/* Fill the guide page */
+function showGuide(key) {
+    const guide = guides[key] || guides.generic;
+
+    document.getElementById("guideHeading").innerHTML =
+        "Transform Your <span>" + escapeHTML(guide.name) + "</span>";
+
+    document.getElementById("guideDescription").textContent = guide.description;
+    document.getElementById("projectTitle").textContent = guide.title;
+    document.getElementById("projectCaption").textContent = guide.caption;
+    document.getElementById("difficultyTag").textContent = guide.difficulty;
+    document.getElementById("timeTag").textContent = guide.time;
+    document.getElementById("safetyText").textContent = guide.safety;
+
+    const image = document.getElementById("guideImage");
+    image.src = guide.image;
+    image.alt = guide.alt;
+
+    image.onerror = function() {
+        this.onerror = null;
+        this.src = "https://placehold.co/900x600/101827/ffd36a?text=Terrawatt+AI+Guide";
+        this.alt = "Recycling guide placeholder";
+    };
+
+    const materials = document.getElementById("materialsList");
+    materials.replaceChildren();
+
+    guide.materials.forEach(item => {
+        const chip = document.createElement("div");
+        chip.className = "material";
+        chip.textContent = "✓ " + item;
+        materials.appendChild(chip);
+    });
+
+    const steps = document.getElementById("stepsList");
+    steps.replaceChildren();
+
+    guide.steps.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "step";
+
+        const number = document.createElement("div");
+        number.className = "step-number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const content = document.createElement("div");
+        const title = document.createElement("h4");
+        title.textContent = item[0];
+
+        const description = document.createElement("p");
+        description.textContent = item[1];
+
+        content.append(title, description);
+        row.append(number, content);
+        steps.appendChild(row);
+    });
+
+    const ideas = document.getElementById("ideasGrid");
+    ideas.replaceChildren();
+
+    guide.ideas.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "idea";
+
+        const emoji = document.createElement("span");
+        emoji.textContent = item[0];
+
+        const title = document.createElement("h4");
+        title.textContent = item[1];
+
+        const description = document.createElement("p");
+        description.textContent = item[2];
+
+        card.append(emoji, title, description);
+        ideas.appendChild(card);
+    });
+
+    switchPage("guidePage");
+}
+
+
+/* Escape heading text safely */
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+    })[char]);
+}
+
+
+/* Handle chat input */
+document.getElementById("chatForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    input.value = "";
+    handleMessage(text);
+});
+
+
+/* Play intro only when the page first loads */
+window.addEventListener("load", function() {
+    setTimeout(() => {
+        document.getElementById("intro").style.display = "none";
+    }, 3700);
+});
+</script>
+
+</body>
+</html>
